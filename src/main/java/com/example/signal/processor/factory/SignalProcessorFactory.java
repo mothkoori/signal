@@ -1,10 +1,14 @@
 package com.example.signal.processor.factory;
 
+import com.example.signal.SignalEnum;
 import com.example.signal.processor.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * This Factory class produces the signal processors based on signal.
@@ -13,15 +17,17 @@ import org.springframework.stereotype.Component;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class SignalProcessorFactory {
 
-    @Autowired
-    Signal1Processor signal1Processor;
-    @Autowired
-    Signal2Processor signal2Processor;
-    @Autowired
-    Signal3Processor signal3Processor;
+    private HashMap<Integer,SignalProcessor> signalProcessorMap = new HashMap<>();
 
     @Autowired
-    DefaultSignalProcessor defaultSignalProcessor;
+    SignalProcessorFactory(List<SignalProcessor> signalProcessors) throws Exception {
+        for(SignalProcessor signalProcessor : signalProcessors){
+            if(signalProcessorMap.get(signalProcessor.getSignal()) != null){
+                throw new Exception("Duplicate signal processor defined for signal "+signalProcessor.getSignal());
+            }
+            signalProcessorMap.put(signalProcessor.getSignal(),signalProcessor);
+        }
+    }
 
     /**
      * This method is used to signal processor based on the signal.
@@ -29,15 +35,10 @@ public class SignalProcessorFactory {
      * @return
      */
     public SignalProcessor getSignalProcessor(Integer signal) {
-        switch (signal) {
-            case 1:
-                return signal1Processor;
-            case 2:
-                return signal2Processor;
-            case 3:
-                return signal3Processor;
-            default:
-                return defaultSignalProcessor;
+        SignalProcessor signalProcessor = signalProcessorMap.get(signal);
+        if(signalProcessor == null){
+            signalProcessor = signalProcessorMap.get(SignalEnum.DEFAULT.getSignal());
         }
+        return signalProcessor;
     }
 }
