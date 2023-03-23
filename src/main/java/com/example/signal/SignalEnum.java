@@ -7,6 +7,7 @@ public enum SignalEnum {
     ONE(1),
     TWO(2),
     THREE(3),
+    FOUR(4),
     DEFAULT(0);
 
     private Integer signal;
