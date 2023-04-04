@@ -4,6 +4,9 @@ import com.example.signal.SignalEnum;
 import com.example.signal.algo.Algo;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class has methods to process the Signal 4.
+ */
 @Service
 public class Signal4Processor extends BaseSignalProcessor{
     Signal4Processor() {

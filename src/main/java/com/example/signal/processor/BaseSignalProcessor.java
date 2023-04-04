@@ -9,7 +9,7 @@ public abstract class BaseSignalProcessor implements SignalProcessor{
         this.signal = signal;
     }
     @Override
-     public Integer getSignal(){
+     public final Integer getSignal(){
         return signal.getSignal();
      }
 

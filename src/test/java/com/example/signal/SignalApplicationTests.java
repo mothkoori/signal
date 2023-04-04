@@ -1,5 +1,6 @@
 package com.example.signal;
 
+import com.example.signal.algo.Algo;
 import com.example.signal.processor.DefaultSignalProcessor;
 import com.example.signal.processor.Signal1Processor;
 import com.example.signal.processor.SignalProcessor;
@@ -17,12 +18,17 @@ import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SignalApplicationTests {
 
 	@LocalServerPort
 	private int port;
+
+	@Autowired
+	Signal1Processor processor;
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -55,6 +61,16 @@ class SignalApplicationTests {
 		Integer signal = 100;
 		SignalProcessor processor = factory.getSignalProcessor(signal);
 		assertEquals(processor.getClass(), DefaultSignalProcessor.class);
+	}
+
+	@Test
+	void testSignal1Processor(){
+		Algo algo = mock(Algo.class);
+		processor.processSignal(algo);
+		verify(algo).setUp();
+		verify(algo).setAlgoParam(1,60);
+		verify(algo).performCalc();
+		verify(algo).submitToMarket();
 	}
 
 }

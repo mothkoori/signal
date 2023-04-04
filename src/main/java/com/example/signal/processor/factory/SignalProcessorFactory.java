@@ -1,6 +1,7 @@
 package com.example.signal.processor.factory;
 
 import com.example.signal.SignalEnum;
+import com.example.signal.DuplicateSignalProcessor;
 import com.example.signal.processor.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This Factory class produces the signal processors based on signal.
@@ -17,13 +19,13 @@ import java.util.List;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class SignalProcessorFactory {
 
-    private HashMap<Integer,SignalProcessor> signalProcessorMap = new HashMap<>();
+    private Map<Integer,SignalProcessor> signalProcessorMap = new HashMap<>();
 
     @Autowired
     SignalProcessorFactory(List<SignalProcessor> signalProcessors) throws Exception {
         for(SignalProcessor signalProcessor : signalProcessors){
             if(signalProcessorMap.get(signalProcessor.getSignal()) != null){
-                throw new Exception("Duplicate signal processor defined for signal "+signalProcessor.getSignal());
+                throw new DuplicateSignalProcessor("Duplicate signal processor defined for signal "+signalProcessor.getSignal());
             }
             signalProcessorMap.put(signalProcessor.getSignal(),signalProcessor);
         }

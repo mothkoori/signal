@@ -14,9 +14,11 @@ public class Application implements SignalHandler {
     SignalProcessorFactory factory;
     @Override
     public void handleSignal(int signal) {
-        Algo algo = new Algo();
-        SignalProcessor signalProcessor = factory.getSignalProcessor(signal);
-        signalProcessor.processSignal(algo);
-        algo.doAlgo();
+        synchronized(this) {
+            Algo algo = new Algo();
+            SignalProcessor signalProcessor = factory.getSignalProcessor(signal);
+            signalProcessor.processSignal(algo);
+            algo.doAlgo();
+        }
     }
 }
